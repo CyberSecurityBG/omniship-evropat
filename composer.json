@@ -1,0 +1,25 @@
+{
+    "name": "simexis/omniship-evropat",
+
+    "description": "PHP library to communicate with the courier Evropat.",
+
+    "require": {
+        "php": "^7",
+        "simexis/omniship": "dev-master"
+    },
+
+    "license": "LGPL-2.1",
+
+    "autoload": {
+        "psr-4": {
+            "Omniship\\Evropat\\": "src"
+        }
+    },
+
+    "authors": [
+        {
+            "name": "Stoyan Stoimenov",
+            "email": "s.stoimenovbg@gmail.com"
+        }
+    ]
+}
