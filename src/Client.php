@@ -3,26 +3,22 @@
 namespace Omniship\Evropat;
 
 use Carbon\Carbon;
-use GuzzleHttp\Client AS HttpClient;
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use http\Client\Response;
 
 class Client
 {
 
-    protected $username;
-    protected $password;
-    protected $key_primary;
-    protected $key_secondary;
+    protected $api_key;
     protected $error;
-    protected $token;
-    const SERVICE_PRODUCTION_URL = 'https://urgentcargus.azure-api.net/api/';
-    public function __construct($username, $password, $token = null)
+    const SERVICE_PRODUCTION_URL = ' https://api.evropat.com/';
+    const SERVICE_TEST_URL = 'https://devapi.evropat.com/';
+
+    public function __construct($api_key)
     {
-        $this->username = $username;
-        $this->password = $password;
-        $this->key_primary = '2e43b07e28f443559b6c3832c46da64b';
-        $this->key_secondary = 'de662014db2240189e7578370b03b975';
-        $this->token = $token;
+        $this->api_key = $api_key;
     }
 
 
@@ -32,24 +28,77 @@ class Client
     }
 
 
-    public function SendRequest($method, $endpoint, $data = []){
-        $Token = $this->getToken();
-        if(!is_null($Token)) {
-            try {
-                $client = new HttpClient(['base_uri' => self::SERVICE_PRODUCTION_URL]);
-                $response = $client->request($method, $endpoint, [
-                    'json' => $data,
-                    'headers' => $this->SetHeader($endpoint, $method, $Token)
-                ]);
-               // dd($response->getBody()->getContents());
-                return json_decode($response->getBody()->getContents());
-            } catch (\Exception $e) {
-                return  $this->error = [
-                    'code' => $e->getCode(),
-                    'error' => json_decode($e->getResponse()->getBody()->getContents())
-                ];
-            }
+    /**
+     * @param $method
+     * @param $endpoint
+     * @param $data
+     * @return array|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function SendRequest($method, $endpoint, $data = [])
+    {
+        try {
+            $client = new HttpClient(['base_uri' => self::SERVICE_TEST_URL]);
+            $response = $client->request($method, $endpoint, [
+                'debug'  => fopen('php://stderr', 'w'),
+                'form_params' => $data,
+            ]);
+
+
+            return json_decode($response->getBody()->getContents());
+        } catch (\Exception $e) {
+            return $this->error = [
+                'code' => $e->getCode(),
+                'error' => $e->getMessage()
+            ];
         }
+
+    }
+
+    /**
+     * @param $api_key
+     * @return \Illuminate\Support\Collection|void
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getClientAddresses($api_key){
+        $get =  $this->SendRequest('POST', 'getclientaddresses', ['clientKey' => $api_key]);
+        if(empty($get->error)){
+            return collect((array)$get->response)->unique('destinationID');
+        }
+    }
+
+    /**
+     * @return false
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getOffices(){
+        $get =  $this->SendRequest('POST', 'getoffices', ['clientKey' => $this->api_key, 'limit' => -1]);
+        if(empty($get->error)){
+            return $get->response;
+        }
+        return false;
+    }
+
+    /**
+     * @return false
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getCities(){
+        $get =  $this->SendRequest('POST', 'getdestinations', ['clientKey' => $this->api_key, 'limit' => -1]);
+        if(empty($get->error)){
+            return $get->response;
+        }
+        return false;
+    }
+
+    /**
+     * @param $number
+     * @param $type
+     * @return array|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getPdf($number, $type){
+        return $this->SendRequest('POST', 'printparcels', ['clientKey' => $this->api_key, 'shipmentBarCode' => $number, 'printoutType' => $type]);
     }
 
 }
