@@ -14,7 +14,7 @@ class Client
     protected $api_key;
     protected $error;
     const SERVICE_PRODUCTION_URL = ' https://api.evropat.com/';
-    const SERVICE_TEST_URL = 'https://devapi.evropat.com/';
+    const SERVICE_TEST_URL = 'https://api.evropat.com/';
 
     public function __construct($api_key)
     {
