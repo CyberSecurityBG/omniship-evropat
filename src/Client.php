@@ -38,7 +38,7 @@ class Client
     public function SendRequest($method, $endpoint, $data = [])
     {
         try {
-            $client = new HttpClient(['base_uri' => self::SERVICE_TEST_URL]);
+            $client = new HttpClient(['base_uri' => self::SERVICE_PRODUCTION_URL]);
             $response = $client->request($method, $endpoint, [
                 'debug'  => fopen('php://stderr', 'w'),
                 'form_params' => $data,
