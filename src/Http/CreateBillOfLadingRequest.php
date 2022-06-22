@@ -58,7 +58,15 @@ class CreateBillOfLadingRequest extends AbstractRequest
                     break;
             }
         }
-
+        if (!empty($this->getOtherParameters('client_number'))) {
+            $data['clientNumber'] = $this->getOtherParameters('client_number');
+            $data['method'] = 1;
+            if($paymentWay == 1){
+                $paymentWay = 3;
+            }elseif($paymentWay == 2){
+                $paymentWay = 4;
+            }
+        }
         // $data
         $data['clientKey'] = $this->getParameter('api_key');
         $data['senderDestID'] = $this->getSenderAddress()->getCity()->getId();
@@ -104,12 +112,12 @@ class CreateBillOfLadingRequest extends AbstractRequest
             $data['cashOnDeliveryDirection'] = 0;
         }
         $data['postalMoneyOrder'] = null;
-        $total_volume = 0;
-        foreach($this->getItems() as $item){
-            $total_volume += ($item->width*$item->height*$item->depth)*$item->quantity;
-        }
-
-        $data['length'] = $total_volume**(1/3);
+//        $total_volume = 0;
+//        foreach($this->getItems() as $item){
+//            $total_volume += ($item->width*$item->height*$item->depth)*$item->quantity;
+//        }
+//
+//        $data['length'] = $total_volume**(1/3);
         $data['height'] = null;
         $data['width'] = null;
         $data['allowShipmentCheck'] = $this->getOtherParameters('allowShipmentCheck');

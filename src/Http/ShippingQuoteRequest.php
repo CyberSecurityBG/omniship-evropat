@@ -62,9 +62,10 @@ class ShippingQuoteRequest extends AbstractRequest
         $data['toDestID'] = $this->getReceiverAddress()->getCity()->getId();
         $data['shipmentType'] = 2;
         $data['payer'] = $paymentWay;
-        $data['method'] =2;
-        if ($data['method'] == 1) {
+        $data['method'] = 2;
+        if (!empty($this->getOtherParameters('clientNumber'))) {
             $data['clientNumber'] = $this->getOtherParameters('clientNumber');
+            $data['method'] = 1;
         }
         if($this->getOtherParameters('returnReceipt')){
             $data['hasReturnReceipt'] = true;
@@ -83,14 +84,17 @@ class ShippingQuoteRequest extends AbstractRequest
         if ($this->getOtherParameters('insurance') == 1) {
             $data['insurance'] = (float)$this->getInsuranceAmount();
         }
-        $data['parcelCount'] = $this->getItems()->count();
-        $total_volume = 0;
-        foreach ($this->getItems() as $item) {
-            $total_volume += ($item->width * $item->height * $item->depth) * $item->quantity;
+        if($this->getOtherParameters('client_number')){
+            $data['client_number'] = $this->getOtherParameters('client_number');
         }
+        $data['parcelCount'] = $this->getItems()->count();
+//        $total_volume = 0;
+//        foreach ($this->getItems() as $item) {
+//            $total_volume += ($item->width * $item->height * $item->depth) * $item->quantity;
+//        }
 
         $data['weight'] = $this->getWeight();
-        $data['sizeL'] = number_format($total_volume ** (1 / 3), 2, '.', '');
+        //$data['sizeL'] = number_format($total_volume ** (1 / 3), 2, '.', '');
         $data['verification'] = $this->getOtherParameters('verification') == 1 ? true : false;
         $data['notification'] = $this->getOtherParameters('notification') == 1 ? true : false;
         return array_filter($data);
