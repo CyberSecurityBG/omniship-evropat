@@ -101,4 +101,18 @@ class Client
         return $this->SendRequest('POST', 'printshipment', ['clientKey' => $this->api_key, 'shipmentBarCode' => $number, 'printoutType' => $type]);
     }
 
+    /**
+     * @param $number
+     * @param $type
+     * @return array|mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getParcels($number, $type){
+        $response =  $this->SendRequest('POST', 'printparcels', ['clientKey' => $this->api_key, 'shipmentBarCode' => $number, 'printoutType' => $type]);
+        if(empty($response->error)){
+            return file_get_contents($response->response);
+        }
+        return false;
+    }
+
 }
