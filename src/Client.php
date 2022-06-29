@@ -98,7 +98,7 @@ class Client
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getPdf($number, $type){
-        return $this->SendRequest('POST', 'printparcels', ['clientKey' => $this->api_key, 'shipmentBarCode' => $number, 'printoutType' => $type]);
+        return $this->SendRequest('POST', 'printshipment', ['clientKey' => $this->api_key, 'shipmentBarCode' => $number, 'printoutType' => $type]);
     }
 
 }
