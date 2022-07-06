@@ -85,6 +85,11 @@ class CreateBillOfLadingRequest extends AbstractRequest
         } else {
             $data['recipientAddress'] = $this->getReceiverAddress()->getText();
         }
+        if($this->getOtherParameters('number_package') > 0){
+            $number_package = $this->getOtherParameters('number_package');
+        } else {
+            $number_package = $this->getItems()->count();
+        }
         $data['recipientName'] = $this->getReceiverAddress()->getFullName();
         $data['recipientPhone'] = $this->getReceiverPhone();
         $data['deliveryType'] = $shipmentType;
@@ -98,7 +103,7 @@ class CreateBillOfLadingRequest extends AbstractRequest
         $data['verification'] = $this->getOtherParameters('verification') == 1 ? true : false;
         $data['notification'] = $this->getOtherParameters('notification') == 1 ? true : false;;
         $data['recipientEmail'] = $this->getReceiverEmail();
-        $data['parcelCount'] = $this->getItems()->count();
+        $data['parcelCount'] = $number_package;
         $data['shipmentWeight'] = $this->getWeight();
         if(!empty($this->getOtherParameters('breakable'))) {
             $data['breakable'] = true;
