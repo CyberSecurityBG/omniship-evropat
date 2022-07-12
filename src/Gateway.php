@@ -15,7 +15,7 @@ class Gateway extends AbstractGateway
 
     private $name = 'Evropat';
     protected $client;
-    const TRACKING_URL = 'https://berry.bg/bg/t/';
+    const TRACKING_URL = 'https://evropat.bg/track/';
 
     /**
      * @return stringc
