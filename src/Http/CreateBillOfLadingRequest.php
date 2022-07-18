@@ -61,11 +61,6 @@ class CreateBillOfLadingRequest extends AbstractRequest
         if (!empty($this->getOtherParameters('client_number'))) {
             $data['clientNumber'] = $this->getOtherParameters('client_number');
             $data['method'] = 1;
-            if($paymentWay == 1){
-                $paymentWay = 3;
-            }elseif($paymentWay == 2){
-                $paymentWay = 4;
-            }
         }
         // $data
         $data['clientKey'] = $this->getParameter('api_key');
