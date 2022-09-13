@@ -58,6 +58,13 @@ class CreateBillOfLadingRequest extends AbstractRequest
                     break;
             }
         }
+        if($paymentWay == 1 && !empty($this->getOtherParameters('client_number'))){
+            $paymentWay = 3;
+        }
+        if($paymentWay == 2 && !empty($this->getOtherParameters('client_number'))){
+            $paymentWay = 4;
+        }
+        $data['method'] = 2;
         if (!empty($this->getOtherParameters('client_number'))) {
             $data['clientNumber'] = $this->getOtherParameters('client_number');
             $data['method'] = 1;
@@ -118,6 +125,11 @@ class CreateBillOfLadingRequest extends AbstractRequest
 //        }
 //
 //        $data['length'] = $total_volume**(1/3);
+        if($this->getMoneyTransfer() == 1 && !empty($this->getOtherParameters('client_number'))){
+            $data['postalMoneyOrder'] = (float)$this->getCashOnDeliveryAmount();
+            $data['cashOnDelivery'] = null;
+            unset($data['cashOnDeliveryDirection']);
+        }
         $data['height'] = null;
         $data['width'] = null;
         $data['allowShipmentCheck'] = $this->getOtherParameters('allowShipmentCheck');

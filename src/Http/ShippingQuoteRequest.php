@@ -74,6 +74,10 @@ class ShippingQuoteRequest extends AbstractRequest
         if ($this->getOtherParameters('cd') == 1) {
             $data['cashOnDelivery'] = (float)$this->getCashOnDeliveryAmount();
         }
+        if($this->getMoneyTransfer() == 1){
+            $data['postalMoneyOrder'] = (float)$this->getCashOnDeliveryAmount();
+            $data['cashOnDelivery'] = null;
+        }
         if($this->getOtherParameters('accompanyingDocuments')){
             $data['accompanyingDocuments'] = true;
         }

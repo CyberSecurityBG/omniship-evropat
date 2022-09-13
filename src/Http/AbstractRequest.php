@@ -28,6 +28,17 @@ abstract class AbstractRequest extends BaseAbstractRequest implements RequestInt
         return $this->getParameter('api_key');
     }
 
+
+    public function setMoneyTransfer($value)
+    {
+        return $this->setParameter('money_transfer', $value);
+    }
+
+    public function getMoneyTransfer()
+    {
+        return $this->getParameter('money_transfer');
+    }
+
     /**
      * @param $value
      * @return $this

@@ -115,4 +115,16 @@ class Client
         return false;
     }
 
+    /**
+     * @return false|string
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getAddress(){
+        $response =  $this->SendRequest('POST', 'getclientaddresses', ['clientKey' => $this->api_key]);
+        if(empty($response->error)){
+            return $response->response;
+        }
+        return false;
+    }
+
 }
