@@ -83,15 +83,21 @@ class CreateBillOfLadingRequest extends AbstractRequest
 
         if(!empty($this->getReceiverAddress()->getOffice())) {
             $data['recipientOfficeID'] = $this->getReceiverAddress()->getOffice()->getId();
-            $data['recipientAddress'] = $this->getReceiverAddress()->getCity()->getName();
+            $data['recipientAddress'] = $this->getReceiverAddress()->getOffice()->getName();
         } else {
-            $data['recipientAddress'] = $this->getReceiverAddress()->getText();
+            $data['recipientAddress'] = $this->getReceiverAddress()->getCountry()->getName().', '. $this->getReceiverAddress()->getCity()->getName().
+                ', '.$this->getReceiverAddress()->getStreet()->getName().' '.$this->getReceiverAddress()->getStreetNumber().
+                ', '.$this->getReceiverAddress()->getAddress1();
+
+          //  $data['recipientAddress'] = $this->getReceiverAddress()->getText();
         }
+
         if($this->getOtherParameters('number_package') > 0){
             $number_package = $this->getOtherParameters('number_package');
         } else {
             $number_package = $this->getItems()->count();
         }
+
         $data['recipientName'] = $this->getReceiverAddress()->getFullName();
         $data['recipientPhone'] = $this->getReceiverPhone();
         $data['deliveryType'] = $shipmentType;
