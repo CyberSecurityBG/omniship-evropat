@@ -84,7 +84,7 @@ class Client
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getCities(){
-        $get =  $this->SendRequest('POST', 'getdestinations', ['clientKey' => $this->api_key, 'limit' => -1]);
+        $get =  $this->SendRequest('POST', 'getdestinations?extendedResponse=true', ['clientKey' => $this->api_key, 'limit' => -1]);
         if(empty($get->error)){
             return $get->response;
         }
