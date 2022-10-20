@@ -17,9 +17,10 @@ class CreateBillOfLadingResponse extends AbstractResponse
      */
     public function getData()
     {
-        if(!empty($this->getMessage())){
+        if(!empty($this->getMessage()) || empty($this->data->response)){
             return null;
         }
+
         $client = (new Client($this->getRequest()->getParameter('api_key')));
         $pdf = $client->getPdf($this->data->response[0], 'A4');
         $data = $this->data;
